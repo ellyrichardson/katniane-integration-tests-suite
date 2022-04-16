@@ -56,15 +56,15 @@ public class TestSuite {
 		Response getResponse = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/logs/db_login_attempts.log/2022-02-23")
+                .get("/logs/db_login_attempts.log/2022-04-16")
                 .then()
                 .extract().response();
 		
 		Assertions.assertEquals(200, getResponse.statusCode());
-        Assertions.assertEquals("DB login attempt", getResponse.jsonPath().getString("contents.title[4]"));
-        Assertions.assertEquals("Richard has 3 failed attempts with logging in to the DB", getResponse.jsonPath().getString("contents.content[4]"));
-        Assertions.assertFalse(getResponse.jsonPath().getString("contents.timestamp[4]").isEmpty());
-        Assertions.assertFalse(getResponse.jsonPath().getString("contents.reporter[4]").isEmpty());
+        Assertions.assertEquals("DB login attempt", getResponse.jsonPath().getString("contents.title[0]"));
+        Assertions.assertEquals("Richard has 3 failed attempts with logging in to the DB", getResponse.jsonPath().getString("contents.content[0]"));
+        Assertions.assertFalse(getResponse.jsonPath().getString("contents.timestamp[0]").isEmpty());
+        Assertions.assertFalse(getResponse.jsonPath().getString("contents.reporter[0]").isEmpty());
         System.out.println("The getResponse status received: " + getResponse.statusLine());
 		System.out.println("getResponse=>" + getResponse.prettyPrint());
 	}
@@ -78,7 +78,7 @@ public class TestSuite {
 		RequestSpecification request = RestAssured.given();
 		JSONObject requestParams = new JSONObject(); 
 		try {
-			requestParams.put("filename", "log_to_be_claimed.log");
+			requestParams.put("filename", "some_log_to_be_claimed.log");
 			requestParams.put("title", "Log Claiming Attempt"); 
 			requestParams.put("content", "Richard has 3 failed attempts when claiming the log"); 
 		} catch (JSONException e) {
@@ -97,13 +97,13 @@ public class TestSuite {
 		Response getResponse = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/logs/log_to_be_claimed.log/2022-02-23")
+                .get("/logs/some_log_to_be_claimed.log/2022-04-16")
                 .then()
                 .extract().response();
 		
 		Assertions.assertEquals(200, getResponse.statusCode());
         Assertions.assertEquals("Log Claiming Attempt", getResponse.jsonPath().getString("contents.title[0]"));
-        Assertions.assertEquals("Richard has 3 failed attempts when claiming the log", getResponse.jsonPath().getString("contents.content[4]"));
+        Assertions.assertEquals("Richard has 3 failed attempts when claiming the log", getResponse.jsonPath().getString("contents.content[0]"));
         Assertions.assertFalse(getResponse.jsonPath().getString("contents.timestamp[0]").isEmpty());
         Assertions.assertFalse(getResponse.jsonPath().getString("contents.reporter[0]").isEmpty());
         System.out.println("The getResponse status received: " + getResponse.statusLine());
@@ -114,7 +114,7 @@ public class TestSuite {
 		 * */
 		JSONObject requestParamsForOpeningLog = new JSONObject(); 
 		try {
-			requestParamsForOpeningLog.put("filename", "log_to_be_claimed.log");
+			requestParamsForOpeningLog.put("filename", "some_log_to_be_claimed.log");
 			// Charlie's pubkey
 			requestParamsForOpeningLog.put("claimer_pubkey", "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y"); 
 		} catch (JSONException e) {
@@ -135,12 +135,13 @@ public class TestSuite {
 	 * */
 	@Test
 	public void testLogClaiming() {
+		RestAssured.baseURI = "http://127.0.0.1:3030/v1"; 
 		/*
 		 * Claim an open log
 		 * */
 		JSONObject requestParamsForClaimingLog = new JSONObject(); 
 		try {
-			requestParamsForClaimingLog.put("filename", "log_to_be_claimed.log");
+			requestParamsForClaimingLog.put("filename", "some_log_to_be_claimed.log");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
